@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from sqlalchemy import (
+    Uuid,
     Boolean,
     Column,
     UniqueConstraint,
@@ -15,16 +17,16 @@ from sqlalchemy.orm import relationship
 class ProjectPlace(Base):
     __tablename__ = "project_places"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Uuid, primary_key=True)
 
     project_id = Column(
-        Integer,
+        Uuid,
         ForeignKey("travel_projects.id", ondelete="CASCADE"),
         nullable=False,
     )
 
     # external API
-    external_id = Column(Integer, nullable=False)
+    external_id = Column(Uuid, nullable=False)
 
     title = Column(String(255), nullable=False)
     artist = Column(String(255))

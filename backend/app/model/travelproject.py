@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import (
     Boolean,
+    Uuid,
     Column,
     Date,
     DateTime,
@@ -15,7 +16,7 @@ from sqlalchemy.orm import relationship
 class TravelProject(Base):
     __tablename__ = "travel_projects"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Uuid, primary_key=True)
 
     user_id = Column(
         Integer,
