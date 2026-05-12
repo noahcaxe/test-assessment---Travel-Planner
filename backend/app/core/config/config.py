@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
+    JWT_SECRET: str
+    JWT_ALGORITHM: str 
+    ACCESS_TOKEN_MINUTES: int 
+    REFRESH_TOKEN_DAYS: int
+
+
     class Config:
         env_file = ".env"
         env_file_config = "utf-8"
