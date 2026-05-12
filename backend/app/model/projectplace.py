@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text, UniqueConstraint, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -19,7 +19,7 @@ class ProjectPlace(Base):
         nullable=False,
     )
 
-    external_id = Column(UUID(as_uuid=True), nullable=False)
+    external_id = Column(Integer, nullable=False)
 
     title = Column(String(255), nullable=False)
     artist = Column(String(255))

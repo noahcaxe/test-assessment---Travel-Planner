@@ -45,7 +45,7 @@ class ProjectPlaceRepository:
         self,
         session: AsyncSession,
         project_id: uuid.UUID,
-        external_id: uuid.UUID,
+        external_id: int,         
     ) -> ProjectPlace | None:
         result = await session.execute(
             select(ProjectPlace).where(

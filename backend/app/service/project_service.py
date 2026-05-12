@@ -1,5 +1,4 @@
 import uuid
-from datetime import date
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,14 +20,13 @@ class ProjectService:
         user_id: uuid.UUID,
         data: TravelProjectCreate,
     ) -> TravelProject:
-        project = await self._project_repo.create(
+        return await self._project_repo.create(
             session=session,
             user_id=user_id,
             name=data.name,
             description=data.description,
             start_date=data.start_date,
         )
-        return project
 
     @with_session_readonly
     async def get_by_id(
@@ -47,7 +45,7 @@ class ProjectService:
 
         return project
 
-    @with_session
+    @with_session_readonly
     async def list_by_user(
         self,
         session: AsyncSession,
@@ -79,6 +77,9 @@ class ProjectService:
 
         if data.start_date is not None:
             project.start_date = data.start_date
+
+        if data.is_completed is not None:
+            project.is_completed = data.is_completed
 
         return await self._project_repo.update(session, project)
 

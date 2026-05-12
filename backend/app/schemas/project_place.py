@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class ProjectPlaceCreate(BaseModel):
-    external_id: uuid.UUID
+    external_id: int
 
 
 class ProjectPlaceUpdate(BaseModel):
@@ -15,7 +15,7 @@ class ProjectPlaceUpdate(BaseModel):
 
 class ProjectPlaceResponse(BaseModel):
     id: uuid.UUID
-    external_id: uuid.UUID
+    external_id: int
 
     title: str
     artist: str | None = None
