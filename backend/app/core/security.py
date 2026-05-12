@@ -29,11 +29,11 @@ def create_access_token(
     data = payload.copy()
     data["exp"] = expire
 
-    return jwt.encode(data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(data, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 
 def decode_access_token(token: str) -> dict:
-    return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+    return jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
 
 
 
