@@ -1,5 +1,8 @@
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.model.user import User
 
 
@@ -13,13 +16,14 @@ class UserRepository:
     ) -> User:
 
         user = User(
+            id=uuid.uuid4(),
             email=email,
             password_hash=password_hash,
         )
 
         session.add(user)
 
-        await session.commit()
+        await session.flush()
         await session.refresh(user)
 
         return user
@@ -27,12 +31,10 @@ class UserRepository:
     async def get_by_id(
         self,
         session: AsyncSession,
-        user_id: int,
+        user_id: uuid.UUID,
     ) -> User | None:
 
-        stmt = select(User).where(
-            User.id == user_id
-        )
+        stmt = select(User).where(User.id == user_id)
 
         result = await session.execute(stmt)
 
@@ -44,9 +46,7 @@ class UserRepository:
         email: str,
     ) -> User | None:
 
-        stmt = select(User).where(
-            User.email == email
-        )
+        stmt = select(User).where(User.email == email)
 
         result = await session.execute(stmt)
 
@@ -60,7 +60,7 @@ class UserRepository:
 
         await session.delete(user)
 
-        await session.commit()
+        await session.flush()
 
 
 user_repo = UserRepository()

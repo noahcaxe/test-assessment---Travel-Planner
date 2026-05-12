@@ -1,5 +1,8 @@
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.model.projectplace import ProjectPlace
 
 
@@ -8,14 +11,15 @@ class ProjectPlaceRepository:
     async def create(
         self,
         session: AsyncSession,
-        project_id: int,
-        external_id: int,
+        project_id: uuid.UUID,
+        external_id: uuid.UUID,
         title: str,
         artist: str | None,
         image_url: str | None,
     ) -> ProjectPlace:
 
         place = ProjectPlace(
+            id=uuid.uuid4(),
             project_id=project_id,
             external_id=external_id,
             title=title,
@@ -25,7 +29,7 @@ class ProjectPlaceRepository:
 
         session.add(place)
 
-        await session.commit()
+        await session.flush()
         await session.refresh(place)
 
         return place
@@ -33,7 +37,7 @@ class ProjectPlaceRepository:
     async def get_by_id(
         self,
         session: AsyncSession,
-        place_id: int,
+        place_id: uuid.UUID,
     ) -> ProjectPlace | None:
 
         stmt = select(ProjectPlace).where(
@@ -47,8 +51,8 @@ class ProjectPlaceRepository:
     async def get_by_external_id(
         self,
         session: AsyncSession,
-        project_id: int,
-        external_id: int,
+        project_id: uuid.UUID,
+        external_id: uuid.UUID,
     ) -> ProjectPlace | None:
 
         stmt = select(ProjectPlace).where(
@@ -63,7 +67,7 @@ class ProjectPlaceRepository:
     async def list_by_project(
         self,
         session: AsyncSession,
-        project_id: int,
+        project_id: uuid.UUID,
     ) -> list[ProjectPlace]:
 
         stmt = select(ProjectPlace).where(
@@ -82,7 +86,7 @@ class ProjectPlaceRepository:
 
         session.add(place)
 
-        await session.commit()
+        await session.flush()
         await session.refresh(place)
 
         return place
@@ -95,6 +99,7 @@ class ProjectPlaceRepository:
 
         await session.delete(place)
 
-        await session.commit()
+        await session.flush()
+
 
 proj_place_repo = ProjectPlaceRepository()

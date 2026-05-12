@@ -19,7 +19,7 @@ class TravelProject(Base):
     id = Column(Uuid, primary_key=True)
 
     user_id = Column(
-        Integer,
+        Uuid,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
     )
