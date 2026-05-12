@@ -1,42 +1,37 @@
-from datetime import datetime
+import uuid
+from datetime import datetime, timezone
 
-from sqlalchemy import (
-    Uuid,
-    Boolean,
-    Column,
-    UniqueConstraint,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-)
-from app.db.database import Base 
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text, UniqueConstraint
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
+from app.db.database import Base
+
 
 class ProjectPlace(Base):
     __tablename__ = "project_places"
 
-    id = Column(Uuid, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     project_id = Column(
-        Uuid,
+        UUID(as_uuid=True),
         ForeignKey("travel_projects.id", ondelete="CASCADE"),
         nullable=False,
     )
 
-    # external API
-    external_id = Column(Uuid, nullable=False)
+    external_id = Column(UUID(as_uuid=True), nullable=False)
 
     title = Column(String(255), nullable=False)
     artist = Column(String(255))
     image_url = Column(String(500))
 
-    # local fields
     notes = Column(Text)
     visited = Column(Boolean, default=False)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
 
     project = relationship(
         "TravelProject",

@@ -1,25 +1,20 @@
-from datetime import datetime
-from sqlalchemy import (
-    Boolean,
-    Uuid,
-    Column,
-    Date,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-)
-from app.db.database import Base 
+import uuid
+from datetime import datetime, timezone
+
+from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
+from app.db.database import Base
+
 
 class TravelProject(Base):
     __tablename__ = "travel_projects"
 
-    id = Column(Uuid, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     user_id = Column(
-        Uuid,
+        UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
     )
@@ -30,11 +25,14 @@ class TravelProject(Base):
 
     is_completed = Column(Boolean, default=False)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
     updated_at = Column(
-        DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     user = relationship("User", back_populates="projects")
