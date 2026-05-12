@@ -16,16 +16,13 @@ class TokenRepository:
         token_hash: str,
         expires_at: datetime,
     ) -> RefreshToken:
-
         token = RefreshToken(
-            id=uuid.uuid4(),
             user_id=user_id,
             token_hash=token_hash,
             expires_at=expires_at,
         )
 
         session.add(token)
-
         await session.flush()
         await session.refresh(token)
 
@@ -36,13 +33,9 @@ class TokenRepository:
         session: AsyncSession,
         token_hash: str,
     ) -> RefreshToken | None:
-
-        stmt = select(RefreshToken).where(
-            RefreshToken.token_hash == token_hash
+        result = await session.execute(
+            select(RefreshToken).where(RefreshToken.token_hash == token_hash)
         )
-
-        result = await session.execute(stmt)
-
         return result.scalar_one_or_none()
 
     async def revoke(
@@ -50,11 +43,8 @@ class TokenRepository:
         session: AsyncSession,
         token: RefreshToken,
     ) -> None:
-
         token.revoked = True
-
         session.add(token)
-
         await session.flush()
 
     async def revoke_all_by_user(
@@ -62,8 +52,7 @@ class TokenRepository:
         session: AsyncSession,
         user_id: uuid.UUID,
     ) -> None:
-
-        stmt = (
+        await session.execute(
             update(RefreshToken)
             .where(
                 RefreshToken.user_id == user_id,
@@ -71,8 +60,6 @@ class TokenRepository:
             )
             .values(revoked=True)
         )
-
-        await session.execute(stmt)
 
 
 token_repo = TokenRepository()

@@ -18,9 +18,7 @@ class ProjectRepository:
         description: str | None,
         start_date: date | None,
     ) -> TravelProject:
-
         project = TravelProject(
-            id=uuid.uuid4(),
             user_id=user_id,
             name=name,
             description=description,
@@ -28,7 +26,6 @@ class ProjectRepository:
         )
 
         session.add(project)
-
         await session.flush()
         await session.refresh(project)
 
@@ -39,15 +36,11 @@ class ProjectRepository:
         session: AsyncSession,
         project_id: uuid.UUID,
     ) -> TravelProject | None:
-
-        stmt = (
+        result = await session.execute(
             select(TravelProject)
             .where(TravelProject.id == project_id)
             .options(selectinload(TravelProject.places))
         )
-
-        result = await session.execute(stmt)
-
         return result.scalar_one_or_none()
 
     async def get_all_by_user(
@@ -55,15 +48,11 @@ class ProjectRepository:
         session: AsyncSession,
         user_id: uuid.UUID,
     ) -> list[TravelProject]:
-
-        stmt = (
+        result = await session.execute(
             select(TravelProject)
             .where(TravelProject.user_id == user_id)
-            .order_by(TravelProject.id.desc())
+            .order_by(TravelProject.created_at.desc())
         )
-
-        result = await session.execute(stmt)
-
         return list(result.scalars().all())
 
     async def update(
@@ -71,9 +60,7 @@ class ProjectRepository:
         session: AsyncSession,
         project: TravelProject,
     ) -> TravelProject:
-
         session.add(project)
-
         await session.flush()
         await session.refresh(project)
 
@@ -84,9 +71,7 @@ class ProjectRepository:
         session: AsyncSession,
         project: TravelProject,
     ) -> None:
-
         await session.delete(project)
-
         await session.flush()
 
 

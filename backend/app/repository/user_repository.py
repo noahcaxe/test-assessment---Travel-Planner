@@ -14,15 +14,12 @@ class UserRepository:
         email: str,
         password_hash: str,
     ) -> User:
-
         user = User(
-            id=uuid.uuid4(),
             email=email,
             password_hash=password_hash,
         )
 
         session.add(user)
-
         await session.flush()
         await session.refresh(user)
 
@@ -33,11 +30,9 @@ class UserRepository:
         session: AsyncSession,
         user_id: uuid.UUID,
     ) -> User | None:
-
-        stmt = select(User).where(User.id == user_id)
-
-        result = await session.execute(stmt)
-
+        result = await session.execute(
+            select(User).where(User.id == user_id)
+        )
         return result.scalar_one_or_none()
 
     async def get_by_email(
@@ -45,11 +40,9 @@ class UserRepository:
         session: AsyncSession,
         email: str,
     ) -> User | None:
-
-        stmt = select(User).where(User.email == email)
-
-        result = await session.execute(stmt)
-
+        result = await session.execute(
+            select(User).where(User.email == email)
+        )
         return result.scalar_one_or_none()
 
     async def delete(
@@ -57,9 +50,7 @@ class UserRepository:
         session: AsyncSession,
         user: User,
     ) -> None:
-
         await session.delete(user)
-
         await session.flush()
 
 

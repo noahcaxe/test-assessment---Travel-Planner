@@ -17,9 +17,7 @@ class ProjectPlaceRepository:
         artist: str | None,
         image_url: str | None,
     ) -> ProjectPlace:
-
         place = ProjectPlace(
-            id=uuid.uuid4(),
             project_id=project_id,
             external_id=external_id,
             title=title,
@@ -28,7 +26,6 @@ class ProjectPlaceRepository:
         )
 
         session.add(place)
-
         await session.flush()
         await session.refresh(place)
 
@@ -39,13 +36,9 @@ class ProjectPlaceRepository:
         session: AsyncSession,
         place_id: uuid.UUID,
     ) -> ProjectPlace | None:
-
-        stmt = select(ProjectPlace).where(
-            ProjectPlace.id == place_id
+        result = await session.execute(
+            select(ProjectPlace).where(ProjectPlace.id == place_id)
         )
-
-        result = await session.execute(stmt)
-
         return result.scalar_one_or_none()
 
     async def get_by_external_id(
@@ -54,14 +47,12 @@ class ProjectPlaceRepository:
         project_id: uuid.UUID,
         external_id: uuid.UUID,
     ) -> ProjectPlace | None:
-
-        stmt = select(ProjectPlace).where(
-            ProjectPlace.project_id == project_id,
-            ProjectPlace.external_id == external_id,
+        result = await session.execute(
+            select(ProjectPlace).where(
+                ProjectPlace.project_id == project_id,
+                ProjectPlace.external_id == external_id,
+            )
         )
-
-        result = await session.execute(stmt)
-
         return result.scalar_one_or_none()
 
     async def list_by_project(
@@ -69,13 +60,9 @@ class ProjectPlaceRepository:
         session: AsyncSession,
         project_id: uuid.UUID,
     ) -> list[ProjectPlace]:
-
-        stmt = select(ProjectPlace).where(
-            ProjectPlace.project_id == project_id
+        result = await session.execute(
+            select(ProjectPlace).where(ProjectPlace.project_id == project_id)
         )
-
-        result = await session.execute(stmt)
-
         return list(result.scalars().all())
 
     async def update(
@@ -83,9 +70,7 @@ class ProjectPlaceRepository:
         session: AsyncSession,
         place: ProjectPlace,
     ) -> ProjectPlace:
-
         session.add(place)
-
         await session.flush()
         await session.refresh(place)
 
@@ -96,9 +81,7 @@ class ProjectPlaceRepository:
         session: AsyncSession,
         place: ProjectPlace,
     ) -> None:
-
         await session.delete(place)
-
         await session.flush()
 
 
