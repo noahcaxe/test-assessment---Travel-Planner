@@ -1,37 +1,32 @@
-from datetime import date, datetime
 import uuid
+from datetime import date, datetime
+
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.schemas.project_place import (
-    ProjectPlaceCreate,
-    ProjectPlaceResponse,
-)
+from app.schemas.project_place import ProjectPlaceResponse
 
 
 class TravelProjectCreate(BaseModel):
     name: str = Field(min_length=1, max_length=255)
-
     description: str | None = None
-
     start_date: date | None = None
-
-    places: list[ProjectPlaceCreate] = []
 
 
 class TravelProjectUpdate(BaseModel):
-    name: str | None = None
+    name: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = None
     start_date: date | None = None
+    is_completed: bool | None = None
 
 
 class TravelProjectResponse(BaseModel):
-    id: uuid
-
-    user_id: uuid
+    id: uuid.UUID
+    user_id: uuid.UUID
 
     name: str
     description: str | None = None
     start_date: date | None = None
+    is_completed: bool
 
     created_at: datetime
     updated_at: datetime

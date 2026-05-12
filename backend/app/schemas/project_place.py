@@ -1,10 +1,11 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict
 
 
 class ProjectPlaceCreate(BaseModel):
-    external_id: int
+    external_id: uuid.UUID
 
 
 class ProjectPlaceUpdate(BaseModel):
@@ -13,9 +14,8 @@ class ProjectPlaceUpdate(BaseModel):
 
 
 class ProjectPlaceResponse(BaseModel):
-    id: uuid
-
-    external_id: int
+    id: uuid.UUID
+    external_id: uuid.UUID
 
     title: str
     artist: str | None = None

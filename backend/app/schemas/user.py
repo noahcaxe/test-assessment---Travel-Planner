@@ -1,6 +1,7 @@
-from datetime import datetime
 import uuid
-from pydantic import BaseModel, EmailStr, ConfigDict
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserCreate(BaseModel):
@@ -9,7 +10,7 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
-    id: uuid
+    id: uuid.UUID
     email: EmailStr
     created_at: datetime
 
