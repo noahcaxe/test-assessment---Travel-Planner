@@ -1,0 +1,7 @@
+APP_NAME = str
+DATABASE_URL=postgresql+asyncpg://user:pwd@db:port/name 
+POSTGRES_USER=str
+POSTGRES_PASSWORD=str
+POSTGRES_DB=str
+POSTGRES_HOST=str
+POSTGRES_PORT=int
